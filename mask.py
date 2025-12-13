@@ -49,12 +49,12 @@ def get_mask_token_index(mask_token_id, inputs):
     """
     input_ids = inputs["input_ids"]
 
-    mask_bool = (input_ids == mask_token_id)
+    mask_bool = (input_ids == mask_token_id)[0]
 
     # get indices where True in the mask_bool
     indices = np.nonzero(mask_bool)[0]
     # we know there is one or no mask in the sentnce
-    first = indices[0] if indices.size else None
+    return indices[0] if indices.size else None
 
 
 
@@ -63,8 +63,7 @@ def get_color_for_attention_score(attention_score):
     Return a tuple of three integers representing a shade of gray for the
     given `attention_score`. Each value should be in the range [0, 255].
     """
-    # TODO: Implement this function
-    raise NotImplementedError
+    return (int(255*attention_score), int(255*attention_score), int(255*attention_score))
 
 
 
