@@ -1,8 +1,10 @@
 import sys
 import tensorflow as tf
+import numpy as np
 
 from PIL import Image, ImageDraw, ImageFont
 from transformers import AutoTokenizer, TFBertForMaskedLM
+
 
 # Pre-trained masked language model
 MODEL = "bert-base-uncased"
@@ -45,10 +47,14 @@ def get_mask_token_index(mask_token_id, inputs):
     Return the index of the token with the specified `mask_token_id`, or
     `None` if not present in the `inputs`.
     """
-    for id, input in inputs.enumerate():
-        if input == mask_token_id:
-            return id
-    return None
+    input_ids = inputs["input_ids"]
+
+    mask_bool = (input_ids == mask_token_id)
+
+    # get indices where True in the mask_bool
+    indices = np.nonzero(mask_bool)[0]
+    # we know there is one or no mask in the sentnce
+    first = indices[0] if indices.size else None
 
 
 
