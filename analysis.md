@@ -8,17 +8,18 @@ Example Sentences:
 - it is soon to be Christmas and I still have not [MASK] .
 - when the winter comes around, I tend to feel [MASK] . 
 
-<img src="./assets/analysis_diagrams/Sentence-1_Attention_Layer6_Head7.png " width="300" height="300">
+<img src="./assets/analysis_diagrams/Sentence-1_Attention_Layer6_Head7.png " width="600" height="600">
 
-<img src="./assets/analysis_diagrams/Sentence-2_Attention_Layer6_Head7.png " width="300" height="300">
+<img src="./assets/analysis_diagrams/Sentence-2_Attention_Layer6_Head7.png " width="600" height="600">
 
-<!-- ![sentence 1](./generated_pics/Sentence-1_Attention_Layer6_Head7.png "{width='35'}")
 
-![sentence 2](./generated_pics/Sentence-2_Attention_Layer6_Head7.png) -->
-
-## Layer TODO, Head TODO
+## Layer 8, Head 11
+Words that relate to a noun put attention into it. For example, all words related to 'christmas' have strong attention to it. For the second sentence, this is also true, where words like 'the', 'comes' and 'around' have the strongest attention to the noun 'winter.
 
 Example Sentences:
-- TODO
-- TODO
+- it is soon to be Christmas and I still have not [MASK] .
+- when the winter comes around, I tend to feel [MASK] . 
 
+<img src="./assets/analysis_diagrams/Sentence-1_Attention_Layer8_Head11.png " width="600" height="600">
+
+<img src="./assets/analysis_diagrams/Sentence-2_Attention_Layer8_Head11.png " width="600" height="600">
