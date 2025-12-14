@@ -19,27 +19,31 @@ PIXELS_PER_WORD = 200
 
 
 def main():
-    text = input("Text: ")
+    i = 0
+    while True:
+        text = input("Text: ")
 
-    # Tokenize input
-    tokenizer = AutoTokenizer.from_pretrained(MODEL)
-    inputs = tokenizer(text, return_tensors="tf")
-    mask_token_index = get_mask_token_index(tokenizer.mask_token_id, inputs)
-    if mask_token_index is None:
-        sys.exit(f"Input must include mask token {tokenizer.mask_token}.")
+        # Tokenize input
+        tokenizer = AutoTokenizer.from_pretrained(MODEL)
+        inputs = tokenizer(text, return_tensors="tf")
+        mask_token_index = get_mask_token_index(tokenizer.mask_token_id, inputs)
+        if mask_token_index is None:
+            sys.exit(f"Input must include mask token {tokenizer.mask_token}.")
 
-    # Use model to process input
-    model = TFBertForMaskedLM.from_pretrained(MODEL)
-    result = model(**inputs, output_attentions=True)
+        # Use model to process input
+        model = TFBertForMaskedLM.from_pretrained(MODEL)
+        result = model(**inputs, output_attentions=True)
 
-    # Generate predictions
-    mask_token_logits = result.logits[0, mask_token_index]
-    top_tokens = tf.math.top_k(mask_token_logits, K).indices.numpy()
-    for token in top_tokens:
-        print(text.replace(tokenizer.mask_token, tokenizer.decode([token])))
+        # Generate predictions
+        mask_token_logits = result.logits[0, mask_token_index]
+        top_tokens = tf.math.top_k(mask_token_logits, K).indices.numpy()
+        for token in top_tokens:
+            print(text.replace(tokenizer.mask_token, tokenizer.decode([token])))
 
-    # Visualize attentions
-    visualize_attentions(inputs.tokens(), result.attentions)
+        # Visualize attentions
+        visualize_attentions(i, inputs.tokens(), result.attentions)
+
+        i+=1
 
 
 def get_mask_token_index(mask_token_id, inputs):
@@ -67,7 +71,7 @@ def get_color_for_attention_score(attention_score):
 
 
 
-def visualize_attentions(tokens, attentions):
+def visualize_attentions(iter, tokens, attentions):
     """
     Produce a graphical representation of self-attention scores.
 
@@ -78,9 +82,10 @@ def visualize_attentions(tokens, attentions):
     (starting count from 1).
     """
     # TODO: Update this function to produce diagrams for all layers and heads.
-    for i in range(1, len(attentions)):
-        for j in range(1, len(attentions[0][0])):
+    for i in range(len(attentions)):
+        for j in range(len(attentions[0][0])):
             generate_diagram(
+                iter,
                 i+1,
                 j+1,
                 tokens,
@@ -88,7 +93,7 @@ def visualize_attentions(tokens, attentions):
             )
 
 
-def generate_diagram(layer_number, head_number, tokens, attention_weights):
+def generate_diagram(iter, layer_number, head_number, tokens, attention_weights):
     """
     Generate a diagram representing the self-attention scores for a single
     attention head. The diagram shows one row and column for each of the
@@ -135,7 +140,7 @@ def generate_diagram(layer_number, head_number, tokens, attention_weights):
             draw.rectangle((x, y, x + GRID_SIZE, y + GRID_SIZE), fill=color)
 
     # Save image
-    img.save(f"generated_pics/Attention_Layer{layer_number}_Head{head_number}.png")
+    img.save(f"generated_pics/Sentence-{iter}_Attention_Layer{layer_number}_Head{head_number}.png")
 
 
 if __name__ == "__main__":
